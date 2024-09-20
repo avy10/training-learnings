@@ -1,5 +1,8 @@
 import axios from "axios";
 import { createSlice } from "@reduxjs/toolkit";
+const JWT_TOKEN =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YjlmZWNjZTMzZmE0NTVlZjg5ODA4YSIsImlhdCI6MTcyNjc1MTA1MywiZXhwIjoxNzU4Mjg3MDUzfQ.ScXemniTQ91mqpZMdvz5pI_tmqrvL-Imy5OiWEQIQSk";
+
 export const postsInitialState = {
   postsArr: [],
   postsUpdate: true,
@@ -12,14 +15,14 @@ const postSlice = createSlice({
       state.postsArr = action.payload;
       state.postsUpdate = false;
     },
-    postsUpdated(state) {
-      state.postsUpdate = true;
+    postsUpdated(state, action) {
+      state.postsUpdate = action.payload;
     },
   },
 });
 
-export function getPosts() {
-  return async function (dispatch, getState) {
+export const getPosts = () => {
+  return async (dispatch, getState) => {
     const host = `https://academics.newtonschool.co/api/v1/facebook/post`;
     try {
       const response = await axios.get(host, {
@@ -28,12 +31,97 @@ export function getPosts() {
         },
       });
       //   console.log(response);
-      dispatch({ type: "posts/updatePosts", payload: response.data.data });
+      setTimeout(() => {
+        dispatch({ type: "posts/updatePosts", payload: response.data.data });
+        dispatch({ type: "posts/postsUpdated", payload: false });
+      }, 2000);
+      // dispatch({ type: "posts/updatePosts", payload: response.data.data });
     } catch (error) {
       console.log(error);
     }
   };
-}
+};
+export const createPostApiCall = (postContent, handleModalClose) => {
+  return async (dispatch) => {
+    dispatch({ type: "posts/postsUpdated", payload: true });
+
+    const host = `https://academics.newtonschool.co/api/v1/facebook/post`;
+    try {
+      const response = await axios.post(
+        host,
+        {
+          title: "POST TITLE",
+          content: postContent,
+          appType: "facebook",
+        },
+        {
+          headers: {
+            projectID: "lkkoqstnysf1",
+            Authorization: `Bearer ${JWT_TOKEN}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log(response);
+
+      dispatch(getPosts());
+      handleModalClose();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+export const deletingPost = (postID) => {
+  return async (dispatch) => {
+    dispatch({ type: "posts/postsUpdated", payload: true });
+    const host = `https://academics.newtonschool.co/api/v1/facebook/post/${postID}`;
+    try {
+      const response = await axios.delete(host, {
+        headers: {
+          projectID: "lkkoqstnysf1",
+          Authorization: `Bearer ${JWT_TOKEN}`,
+        },
+      });
+      console.log(response);
+      dispatch(getPosts());
+
+      // dispatch(postsUpdated());
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+export const updatingPost = (
+  dispatch,
+  postID,
+  handleIsEdit,
+  postContent,
+  clearPostContent
+) => {
+  return async () => {
+    dispatch({ type: "posts/postsUpdated", payload: true });
+    const host = `https://academics.newtonschool.co/api/v1/facebook/post/${postID}`;
+    const formData = new FormData();
+    formData.append("title", "Edited Title");
+    formData.append("content", postContent);
+    try {
+      const response = await axios.patch(host, formData, {
+        headers: {
+          projectID: "lkkoqstnysf1",
+          Authorization: `Bearer ${JWT_TOKEN}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log(response);
+      dispatch(getPosts());
+
+      clearPostContent();
+      handleIsEdit(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
 export const { postsUpdated } = postSlice.actions;
 
 export default postSlice.reducer;

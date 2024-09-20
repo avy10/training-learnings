@@ -5,16 +5,17 @@ import CreatePost from "./redux-axios-mini-assign/Components/CreatePost";
 import Container from "@mui/material/Container";
 import "./styles.css";
 import GenericModal from "./redux-axios-mini-assign/Components/common/modal/GenericModal";
+import ButtonMUI from "./redux-axios-mini-assign/Components/common/button/ButtonMUI";
 // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YjlmZWNjZTMzZmE0NTVlZjg5ODA4YSIsImlhdCI6MTcyNjc1MTA1MywiZXhwIjoxNzU4Mjg3MDUzfQ.ScXemniTQ91mqpZMdvz5pI_tmqrvL-Imy5OiWEQIQSk"
 export default function App() {
   const [openModal, setOpenModal] = useState(false);
   const handleModalOpen = () => setOpenModal(true);
   const handleModalClose = () => setOpenModal(false);
   return (
-    <Container maxWidth="md" className="App">
+    <Container maxWidth="md" className="app">
       <h1>Facebook feed</h1>
-      <button onClick={handleModalOpen}>Open Modal</button>
-
+      {/* <button onClick={handleModalOpen}>Open Modal</button> */}
+      <ButtonMUI btnText={"Open Modal"} eventHandler={handleModalOpen} />
       <GenericModal
         customStyles={{
           top: "20%",

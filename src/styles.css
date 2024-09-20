@@ -1,4 +1,19 @@
-.App {
+.app {
   font-family: sans-serif;
   text-align: center;
+}
+.modal-content-box .MuiButtonBase-root {
+  width: 30px;
+  min-width: 30px;
+  height: 30px;
+  /* border: 2px solid red; */
+  border-radius: 50%;
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  transition: all ease-in 0.2s;
+}
+.modal-content-box .MuiButtonBase-root:active {
+  transform: scale(0.95);
+  transition: all ease-out 0.2s;
 }

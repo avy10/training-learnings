@@ -1,12 +1,17 @@
-import { useState } from "react";
 import Modal from "@mui/material/Modal";
-import Box from "@mui/material/Button";
+// import { Modal } from "@mui/base/Modal";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 const GenericModal = ({
   customStyles = {},
   modalTitle = "generic-modal",
   modalDescription = "this-is-a-generic-modal",
   openModal,
   handleModalClose,
+
+  needBox = true,
   children,
 }) => {
   const style = {
@@ -21,7 +26,32 @@ const GenericModal = ({
     p: 4,
     ...customStyles,
   };
-
+  if (needBox) {
+    return (
+      <Modal
+        open={openModal}
+        onClose={handleModalClose}
+        aria-labelledby={modalTitle}
+        aria-describedby={modalDescription}
+        disableEnforceFocus
+      >
+        <Box sx={style} className="modal-content-box">
+          {/* <Button className="modal-close-button" variant="text">
+          <CloseIcon sx={{ color: "red", fontSize: "18px" }} />
+        </Button> */}
+          <IconButton
+            className="modal-close-button"
+            aria-label="delete"
+            size="large"
+            onClick={handleModalClose}
+          >
+            <CloseIcon sx={{ color: "black", fontSize: "18px" }} />
+          </IconButton>
+          {children}
+        </Box>
+      </Modal>
+    );
+  }
   return (
     <Modal
       open={openModal}
@@ -29,14 +59,7 @@ const GenericModal = ({
       aria-labelledby={modalTitle}
       aria-describedby={modalDescription}
     >
-      <Box sx={style}>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla
-          accusantium eos fuga quas culpa aspernatur! Eum ipsam ad reprehenderit
-          sunt.
-        </p>
-        {children}
-      </Box>
+      {children}
     </Modal>
   );
 };
