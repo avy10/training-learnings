@@ -9,11 +9,17 @@ const SinglePost = ({ eachPost }) => {
     setIsEdit(value);
   };
   return (
-    <Box key={eachPost?._id}>
+    <Box
+      key={eachPost?._id}
+      sx={{
+        margin: "20px 0px",
+      }}
+    >
       {!isEdit && (
         <div>
           {/* <h3>{eachPost?.title}</h3> */}
           <p>{eachPost?.content}</p>
+
           {/* <p>{eachPost?.author?.name}</p> */}
         </div>
       )}
