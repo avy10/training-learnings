@@ -1,9 +1,13 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getPosts } from "../../../Posts/postSlice";
+import { useEffect } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Box } from "@mui/material";
+
 const withLoader = (Element) => {
   return (props) => {
-    const { loader } = useSelector((state) => state.posts);
+    const { postsArr, postsUpdate } = useSelector((state) => state.posts);
+    const dispatch = useDispatch();
     const customStyles = {
       position: "absolute",
       top: "50%",
@@ -18,7 +22,17 @@ const withLoader = (Element) => {
       columnGap: "10px",
     };
 
-    if (loader) {
+    //  commenting out to stop the data fetch in this component
+    const fetchNewPosts = () => {
+      dispatch(getPosts());
+    };
+    useEffect(() => {
+      fetchNewPosts();
+    }, []);
+    // get rid of fetching
+    // postsUpdate booleans has been removed for now
+    if (postsUpdate || postsArr.length === 0) {
+      // if (postsArr.length === 0) {
       return (
         <Box sx={customStyles}>
           <p>Loading Posts...</p>
@@ -26,8 +40,7 @@ const withLoader = (Element) => {
         </Box>
       );
     }
-
-    return <Element {...props} />;
+    return <Element {...props} postsArr={postsArr} />;
   };
 };
 export default withLoader;

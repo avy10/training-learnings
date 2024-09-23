@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import withLoader from "./common/loader/withLoader";
-import { createPostApiCall } from "../Posts/postSlice";
+import { createANewPost } from "../Posts/postSlice";
 import GenericModal from "./common/modal/GenericModal";
 import ButtonMUI from "./common/button/ButtonMUI";
 const CreatePost = () => {
@@ -11,7 +11,7 @@ const CreatePost = () => {
   const handleModalOpen = () => setOpenModal(true);
   const handleModalClose = () => setOpenModal(false);
   const createPost = () => {
-    dispatch(createPostApiCall(postContent, handleModalClose));
+    dispatch(createANewPost({ postContent, handleModalClose, setPostContent }));
   };
   const handleInputChange = (event) => {
     setPostContent(event.target.value);
@@ -19,7 +19,6 @@ const CreatePost = () => {
 
   return (
     <div>
-      {/* <button onClick={handleModalOpen}>Create Post</button> */}
       <ButtonMUI btnText={"Create Post"} eventHandler={handleModalOpen} />
 
       <GenericModal
@@ -33,6 +32,7 @@ const CreatePost = () => {
         <label>Post Content : </label>
         <input type="text" value={postContent} onChange={handleInputChange} />
         <button onClick={createPost}>Create a new post</button>
+        {/* <ButtonMUI btnText={"Create a new post"} eventHandler={createPost} /> */}
       </GenericModal>
     </div>
   );
