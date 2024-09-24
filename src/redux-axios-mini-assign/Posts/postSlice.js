@@ -2,16 +2,28 @@ import axios from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 const JWT_TOKEN =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YjlmZWNjZTMzZmE0NTVlZjg5ODA4YSIsImlhdCI6MTcyNjc1MTA1MywiZXhwIjoxNzU4Mjg3MDUzfQ.ScXemniTQ91mqpZMdvz5pI_tmqrvL-Imy5OiWEQIQSk";
-export const getPostsData = createAsyncThunk("posts/getPosts", async () => {
-  const host = `https://academics.newtonschool.co/api/v1/facebook/post`;
-  const response = await axios.get(host, {
-    headers: {
-      projectID: "lkkoqstnysf1",
-    },
-  });
-  console.log(response);
-  return response.data;
-});
+export const getPostsData = createAsyncThunk(
+  "posts/getPosts",
+  async (handleOpenSnackBar) => {
+    // const host = `https://academics.newtonschool.co`;
+    console.log("getPostsData is running");
+
+    const host = `https://academics.newtonschool.co/api/v1/facebook/post`;
+    try {
+      const response = await axios.get(host, {
+        headers: {
+          projectID: "lkkoqstnysf1",
+        },
+      });
+      console.log(response);
+      console.log(response?.status);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      handleOpenSnackBar();
+    }
+  }
+);
 export const createANewPost = createAsyncThunk(
   "posts/createNewPost",
   async ({ postContent, handleModalClose, setPostContent }, { dispatch }) => {
