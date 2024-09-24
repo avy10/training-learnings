@@ -7,58 +7,51 @@ import CloseIcon from "@mui/icons-material/Close";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 const SimpleDialog = ({
-  children,
-  openDialog,
-  handleDialogClose,
-  dialogTitle,
-  dialogActionsHandler,
-  dialogActionName,
-  onSubmitHandler,
-  paperPropsObject = {},
-  ariaLabelMsg = "Generic Dialog Box",
+	children,
+	openDialog,
+	handleDialogClose,
+	dialogTitle,
+	dialogActionsHandler,
+	dialogActionName,
+	onSubmitHandler,
+	paperPropsObject = {},
+	ariaLabelMsg = "Generic Dialog Box",
 }) => {
-  console.log("HIIII");
-  // const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  //   "& .MuiDialogContent-root": {
-  //     padding: theme.spacing(2),
-  //   },
-  //   "& .MuiDialogActions-root": {
-  //     padding: theme.spacing(1),
-  //   },
-  // }));
-  return (
-    <Dialog
-      onClose={handleDialogClose}
-      open={openDialog}
-      aria-labelledby={ariaLabelMsg}
-      PaperProps={paperPropsObject}
-    >
-      <DialogTitle sx={{ m: 0, p: 1 }} id="customized-dialog-title">
-        {dialogTitle}
-      </DialogTitle>
-      <IconButton
-        aria-label="close"
-        onClick={handleDialogClose}
-        sx={(theme) => ({
-          position: "absolute",
-          right: 8,
-          top: 8,
-          color: theme.palette.grey[500],
-        })}
-      >
-        <CloseIcon />
-      </IconButton>
-      <DialogContent dividers>{children}</DialogContent>
-      <DialogActions>
-        {/* <Button autoFocus variant="contained" onClick={dialogActionsHandler}>
+	console.log("HIIII");
+
+	return (
+		<Dialog
+			onClose={handleDialogClose}
+			open={openDialog}
+			aria-labelledby={ariaLabelMsg}
+			PaperProps={paperPropsObject}
+		>
+			<DialogTitle sx={{ m: 0, p: 1 }} id="customized-dialog-title">
+				{dialogTitle}
+			</DialogTitle>
+			<IconButton
+				aria-label="close"
+				onClick={handleDialogClose}
+				sx={(theme) => ({
+					position: "absolute",
+					right: 8,
+					top: 8,
+					color: theme.palette.grey[500],
+				})}
+			>
+				<CloseIcon />
+			</IconButton>
+			<DialogContent dividers>{children}</DialogContent>
+			<DialogActions>
+				{/* <Button autoFocus variant="contained" onClick={dialogActionsHandler}>
           {dialogActionName}
         </Button> */}
-        <Button type="submit" variant="contained">
-          {dialogActionName}
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
+				<Button type="submit" variant="contained">
+					{dialogActionName}
+				</Button>
+			</DialogActions>
+		</Dialog>
+	);
 };
 
 export default SimpleDialog;
