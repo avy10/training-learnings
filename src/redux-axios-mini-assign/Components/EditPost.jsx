@@ -49,6 +49,7 @@ const EditPost = ({
         <label>Post Content : </label>
         <input type="text" value={postContent} onChange={handleInputChange} />
         <button onClick={editAPost}>EDIT POST</button>
+        {/* fix the css styling on button element in a modal */}
         {/* <ButtonMUI
           btnText={"EDIT POST"}
           eventHandler={() => {
@@ -62,3 +63,10 @@ const EditPost = ({
 };
 
 export default EditPost;
+/* 
+  no need to wrap EditPost component because, 
+  when a post is edited, a GET api call is made to get the posts data
+  so that the posts data is updated
+  and we already have a loader on PostsList
+  
+*/

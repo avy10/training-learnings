@@ -24,7 +24,6 @@ const SinglePost = ({ eachPost }) => {
 
         {/* <p>{eachPost?.author?.name}</p> */}
       </div>
-      {/* // commenting out to test the axios response on api, 23-09-0629 */}
       {isEdit && (
         <EditPost
           content={eachPost?.content}
@@ -53,7 +52,6 @@ const SinglePost = ({ eachPost }) => {
             }}
             btnSize="small"
           />
-          {/* // commenting out to test the axios response on api, 23-09-0629 */}
           <DeletePost content={eachPost?.content} postID={eachPost?._id} />
         </div>
       )}
