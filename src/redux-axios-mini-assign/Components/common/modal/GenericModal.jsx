@@ -1,7 +1,6 @@
 import Modal from "@mui/material/Modal";
 // import { Modal } from "@mui/base/Modal";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 const GenericModal = ({
@@ -39,14 +38,16 @@ const GenericModal = ({
           {/* <Button className="modal-close-button" variant="text">
           <CloseIcon sx={{ color: "red", fontSize: "18px" }} />
         </Button> */}
-          <IconButton
-            className="modal-close-button"
-            aria-label="delete"
-            size="large"
-            onClick={handleModalClose}
-          >
-            <CloseIcon sx={{ color: "black", fontSize: "18px" }} />
-          </IconButton>
+          <Box className="close-modal-button-box">
+            <IconButton
+              className="modal-close-button"
+              aria-label="delete"
+              size="large"
+              onClick={handleModalClose}
+            >
+              <CloseIcon sx={{ color: "black", fontSize: "18px" }} />
+            </IconButton>
+          </Box>
           {children}
         </Box>
       </Modal>

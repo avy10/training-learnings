@@ -1,24 +1,26 @@
 import { useSelector } from "react-redux";
-import withLoader from "./common/loader/withLoader";
 import SinglePost from "./SinglePost";
-import Snackbar from "@mui/material/Snackbar";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { getPostsData } from "../Posts/postSlice";
+import Loader from "./common/loader/Loader";
+import Snackbar from "@mui/material/Snackbar";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 const PostsList = (props) => {
-  const { postArr, loader } = useSelector((state) => state.posts);
+  const { postsArr, loader, postsDataErrorMsg } = useSelector(
+    (state) => state.posts
+  );
   const [openSnackBar, setOpenSnackBar] = useState(false);
   const [snackBarContent, setSnackBarContent] = useState("");
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log("UseEffect is running");
     fetchNewPosts();
     // fetchNewPosts(handleOpenSnackBar);
   }, []);
   const fetchNewPosts = () => {
     dispatch(getPostsData());
-    console.log("fetchNewPosts is running");
     // getPostsData();
   };
   const handleClick = () => {
@@ -32,14 +34,22 @@ const PostsList = (props) => {
 
     setOpenSnackBar(false);
   };
-  console.log("<>", postArr, loader);
-  return (
+
+  // console.log("<>", postArr, loader);
+  return loader ? (
+    <Loader />
+  ) : (
     <>
-      {postArr?.postsArr.map((eachPost) => (
-        <SinglePost key={eachPost?._id} eachPost={eachPost} />
-      ))}
+      {postsArr.length === 0 ? (
+        <p>No Posts Found</p>
+      ) : (
+        postsArr?.map((eachPost) => (
+          <SinglePost key={eachPost?._id} eachPost={eachPost} />
+        ))
+      )}
     </>
   );
 };
 
-export default withLoader(PostsList);
+// export default withLoader(PostsList);
+export default PostsList;

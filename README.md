@@ -1,3 +1,10 @@
+# Steps to run this project
+
+1. git clone into local drive
+2. open git bash and run command "npm i" or "npm install" to install the required modules
+3. once the node modules are installed, the project is ready to run.
+4. to run the project, use the command "npm start" or "npm run start" in the terminal
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

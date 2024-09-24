@@ -48,15 +48,14 @@ const EditPost = ({
       <div>
         <label>Post Content : </label>
         <input type="text" value={postContent} onChange={handleInputChange} />
-        <button onClick={editAPost}>EDIT POST</button>
-        {/* fix the css styling on button element in a modal */}
-        {/* <ButtonMUI
+        {/* <button onClick={editAPost}>EDIT POST</button> */}
+        <ButtonMUI
           btnText={"EDIT POST"}
           eventHandler={() => {
             editAPost();
           }}
           btnSize="small"
-        /> */}
+        />
       </div>
     </GenericModal>
   );

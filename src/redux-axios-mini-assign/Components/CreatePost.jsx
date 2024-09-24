@@ -1,27 +1,70 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import withLoader from "./common/loader/withLoader";
 import { createANewPost } from "../Posts/postSlice";
-import GenericModal from "./common/modal/GenericModal";
 import ButtonMUI from "./common/button/ButtonMUI";
+import SimpleDialog from "./common/dialog/SimpleDialog";
+import NewPostInputField from "./NewPostInputField";
+import TextField from "@mui/material/TextField";
+import { Box } from "@mui/material";
 const CreatePost = () => {
   const dispatch = useDispatch();
   const [postContent, setPostContent] = useState("");
-  const [openModal, setOpenModal] = useState(false);
-  const handleModalOpen = () => setOpenModal(true);
-  const handleModalClose = () => setOpenModal(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const handleDialogOpen = () => setOpenDialog(true);
+  const handleDialogClose = () => setOpenDialog(false);
   const createPost = () => {
-    dispatch(createANewPost({ postContent, handleModalClose, setPostContent }));
+    dispatch(createANewPost({ postContent, handleDialogClose }));
   };
   const handleInputChange = (event) => {
     setPostContent(event.target.value);
   };
-
+  const paperPropsObject = {
+    component: "form",
+    onSubmit: (event) => {
+      event.preventDefault();
+      const formData = new FormData(event.currentTarget);
+      const formJson = Object.fromEntries(formData.entries());
+      const email = formJson.email;
+      console.log(email);
+      // handleDialogClose(); // close dialog when post successfully created, else show error on top of dialog box itself
+    },
+  };
   return (
     <div>
-      <ButtonMUI btnText={"Create Post"} eventHandler={handleModalOpen} />
+      <ButtonMUI btnText={"Create Post"} eventHandler={handleDialogOpen} />
+      <SimpleDialog
+        openDialog={openDialog}
+        handleDialogClose={handleDialogClose}
+        dialogTitle={"Create post"}
+        dialogActionName={"Post"}
+        dialogActionsHandler={createPost}
+        paperPropsObject={paperPropsObject}
+      >
+        <Box sx={{ width: 400, maxWidth: "100%" }}>
+          <TextField
+            autoFocus
+            required
+            margin="dense"
+            name="email"
+            fullWidth
+            hiddenLabel
+            id="post-content-input-box"
+            variant="outlined"
+            multiline
+            rows={5}
+            placeholder="What's on your mind, User?"
+          />
+        </Box>
+      </SimpleDialog>
+    </div>
+  );
+};
 
-      <GenericModal
+export default CreatePost;
+
+/* 
+// Old GenericModal based code
+<GenericModal
         customStyles={{
           border: "none",
           borderRadius: "7px",
@@ -31,12 +74,11 @@ const CreatePost = () => {
       >
         <label>Post Content : </label>
         <input type="text" value={postContent} onChange={handleInputChange} />
-        <button onClick={createPost}>Create a new post</button>
-        {/* <ButtonMUI btnText={"Create a new post"} eventHandler={createPost} /> */}
+
+        <ButtonMUI
+          btnText={"Create a new post"}
+          btnSize="small"
+          eventHandler={createPost}
+        />
       </GenericModal>
-    </div>
-  );
-};
-export default withLoader(CreatePost);
-// export default CreatePost;
-// abhishekEMT69!
+*/

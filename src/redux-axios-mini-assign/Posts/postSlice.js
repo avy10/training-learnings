@@ -2,25 +2,27 @@ import axios from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 const JWT_TOKEN =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YjlmZWNjZTMzZmE0NTVlZjg5ODA4YSIsImlhdCI6MTcyNjc1MTA1MywiZXhwIjoxNzU4Mjg3MDUzfQ.ScXemniTQ91mqpZMdvz5pI_tmqrvL-Imy5OiWEQIQSk";
+const PROJECT_ID = `lkkoqstnysf1`; // original project ID whose limit got crossed
+// const PROJECT_ID = `afgagewg1000`; // a random project ID
+// const PROJECT_ID = ""; // to simulate invalid project ID error
 export const getPostsData = createAsyncThunk(
   "posts/getPosts",
-  async (handleOpenSnackBar) => {
+  async (_, { rejectWithValue }) => {
     // const host = `https://academics.newtonschool.co`;
-    console.log("getPostsData is running");
 
     const host = `https://academics.newtonschool.co/api/v1/facebook/post`;
     try {
       const response = await axios.get(host, {
         headers: {
-          projectID: "lkkoqstnysf1",
+          projectID: PROJECT_ID,
         },
       });
-      console.log(response);
-      console.log(response?.status);
+      // console.log(response);
+      // console.log(response?.status);
+
       return response.data;
     } catch (error) {
-      console.log(error);
-      handleOpenSnackBar();
+      return rejectWithValue(error);
     }
   }
 );
@@ -38,7 +40,7 @@ export const createANewPost = createAsyncThunk(
       },
       {
         headers: {
-          projectID: "lkkoqstnysf1",
+          projectID: PROJECT_ID,
           Authorization: `Bearer ${JWT_TOKEN}`,
           "Content-Type": "multipart/form-data",
         },
@@ -58,7 +60,7 @@ export const deletePost = createAsyncThunk(
     const host = `https://academics.newtonschool.co/api/v1/facebook/post/${postID}`;
     const response = await axios.delete(host, {
       headers: {
-        projectID: "lkkoqstnysf1",
+        projectID: PROJECT_ID,
         Authorization: `Bearer ${JWT_TOKEN}`,
       },
     });
@@ -79,7 +81,7 @@ export const editPost = createAsyncThunk(
     formData.append("content", postContent);
     const response = await axios.patch(host, formData, {
       headers: {
-        projectID: "lkkoqstnysf1",
+        projectID: PROJECT_ID,
         Authorization: `Bearer ${JWT_TOKEN}`,
         "Content-Type": "multipart/form-data",
       },
@@ -107,13 +109,24 @@ const postSlice = createSlice({
         state.loader = true;
       })
       .addCase(getPostsData.fulfilled, (state, action) => {
+        console.log("I AM RUNNING", action);
+
         state.loader = false;
-        state.postsArr = action.payload.data;
+        state.postsArr = Array.isArray(action?.payload?.data)
+          ? action.payload.data
+          : [];
         state.postsDataErrorMsg = "";
       })
       .addCase(getPostsData.rejected, (state, action) => {
+        console.log(action);
+        const errorMessageFromServer = action.payload.response.data.message;
+        if (errorMessageFromServer) {
+          state.postsDataErrorMsg = errorMessageFromServer;
+        } else {
+          state.postsDataErrorMsg = action.error.message;
+        }
         state.loader = false;
-        state.postsDataErrorMsg = `Error in GET : ${action.error.message} `;
+        // state.postsDataErrorMsg = `Error in GET : ${action.error.message} `;
       })
       .addCase(createANewPost.pending, (state) => {
         state.loader = true;
@@ -148,3 +161,24 @@ const postSlice = createSlice({
   },
 });
 export default postSlice.reducer;
+
+/* 
+// try catch of the getPostsData
+ try {
+      const response = await axios.get(host, {
+        headers: {
+          projectID: PROJECT_ID,
+        },
+      });
+
+      console.log(response);
+      console.log(response?.status);
+
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      // handleOpenSnackBar();
+      return error.response;
+    }
+
+*/

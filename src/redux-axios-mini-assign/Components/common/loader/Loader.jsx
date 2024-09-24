@@ -1,7 +1,7 @@
 import CircularProgress from "@mui/material/CircularProgress";
 import { Box } from "@mui/material";
 
-const Loader = ({ loader }) => {
+const Loader = () => {
   const customStyles = {
     position: "absolute",
     top: "50%",

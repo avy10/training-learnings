@@ -4,6 +4,7 @@ import DeletePost from "./DeletePost";
 import Box from "@mui/material/Box";
 import ButtonMUI from "./common/button/ButtonMUI";
 const SinglePost = ({ eachPost }) => {
+  // const []
   const [isEdit, setIsEdit] = useState(false);
   const handleIsEdit = (value) => {
     setIsEdit(value);
