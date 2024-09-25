@@ -18,6 +18,7 @@
   transition: all ease-out 0.2s;
 }
 
-#customized-dialog-title {
-  text-align: center;
+.action-buttons .MuiButton-root {
+  min-width: 82px;
+  min-height: 31px;
 }
