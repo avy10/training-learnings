@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { editPost, updatingPost } from "../temp-posts/postSlice";
+import { editPost, updatingPost } from "../posts/postSlice";
 import axios from "axios";
 import ButtonMUI from "./common/button/ButtonMUI";
 import GenericModal from "./common/modal/GenericModal";
