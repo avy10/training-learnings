@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 // import { deletingPost } from "../Posts/postSlice";
-import { deletePost } from "../posts/postSlice";
+import { deletePost } from "../temp-posts/postSlice";
 import withLoader from "./common/loader/withLoader";
 import ButtonMUI from "./common/button/ButtonMUI";
 const DeletePost = ({ postID }) => {
