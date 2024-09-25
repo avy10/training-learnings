@@ -11,6 +11,10 @@ import MessageSnackbar from "./common/snackbar/MessageSnackbar";
 // Two approaches for snackbar,
 /* 
 1. handle it in an useEffect (I am implementing this one right now)
+	NO. It will open the snackbar, when error occurs anywhere else in the application because we are using a single central error state
+
+2. pass on the handleSnackbarClick and handleSnackbarClose to the fetchPosts
+  and, call those function upon promise resolve and reject respectively
  */
 const PostsList = (props) => {
 	const { postsArr, loader, postsDataErrorMsg } = useSelector(
@@ -23,9 +27,9 @@ const PostsList = (props) => {
 		fetchNewPosts();
 	}, []);
 	const fetchNewPosts = () => {
-		dispatch(getPostsData());
+		dispatch(getPostsData({ handleSnackbarOpen, handleSnackbarClose }));
 	};
-	const handleSnackbarClick = () => {
+	const handleSnackbarOpen = () => {
 		setOpenSnackBar(true);
 	};
 

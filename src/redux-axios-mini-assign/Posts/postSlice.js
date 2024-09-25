@@ -7,7 +7,10 @@ const PROJECT_ID = `lkkoqstnysf1`; // original project ID whose limit got crosse
 // const PROJECT_ID = ""; // to simulate invalid project ID error
 export const getPostsData = createAsyncThunk(
 	"posts/getPosts",
-	async (_, { rejectWithValue }) => {
+	async (
+		{ handleSnackbarOpen, handleSnackbarClose },
+		{ rejectWithValue }
+	) => {
 		// const host = `https://academics.newtonschool.co`;
 
 		const host = `https://academics.newtonschool.co/api/v1/facebook/post`;
@@ -45,7 +48,7 @@ export const createANewPost = createAsyncThunk(
 					headers: {
 						projectID: PROJECT_ID,
 						Authorization: `Bearer ${JWT_TOKEN}`,
-						// "Content-Type": "multipart/form-data",
+						"Content-Type": "multipart/form-data",
 					},
 				}
 			);
@@ -124,6 +127,7 @@ const postSlice = createSlice({
 					? action.payload.data
 					: [];
 				state.postsDataErrorMsg = "";
+				action.meta.arg.handleSnackbarClose();
 			})
 			.addCase(getPostsData.rejected, (state, action) => {
 				console.log(action);
@@ -135,6 +139,8 @@ const postSlice = createSlice({
 					state.postsDataErrorMsg = action.error.message;
 				}
 				state.loader = false;
+				action.meta.arg.handleSnackbarOpen();
+
 				// state.postsDataErrorMsg = `Error in GET : ${action.error.message} `;
 			})
 			.addCase(createANewPost.pending, (state) => {
