@@ -1,16 +1,34 @@
-import Button from "@mui/material/Button";
-import Snackbar, { SnackbarCloseReason } from "@mui/material/Snackbar";
+import Snackbar from "@mui/material/Snackbar";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-const MessageSnackbar = ({ open, onCloseHandle, message }) => {
-	return (
-		<Snackbar
-			open={open}
-			autoHideDuration={6000}
-			onClose={onCloseHandle}
-			message={message}
-		/>
-	);
+import { Button } from "@mui/material";
+const MessageSnackbar = ({
+  open,
+  onCloseHandle,
+  message,
+  hideAfter = 4000,
+}) => {
+  const action = (
+    <>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={onCloseHandle}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </>
+  );
+  return (
+    <Snackbar
+      open={open}
+      autoHideDuration={hideAfter}
+      onClose={onCloseHandle}
+      action={action}
+      message={message}
+    />
+  );
 };
 
 export default MessageSnackbar;

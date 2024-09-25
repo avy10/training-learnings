@@ -46,7 +46,7 @@ export const createANewPost = createAsyncThunk(
           headers: {
             projectID: PROJECT_ID,
             Authorization: `Bearer ${JWT_TOKEN}`,
-            "Content-Type": "multipart/form-data",
+            // "Content-Type": "multipart/form-data",
           },
         }
       );

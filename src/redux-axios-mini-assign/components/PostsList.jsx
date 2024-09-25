@@ -17,49 +17,49 @@ import MessageSnackbar from "./common/snackbar/MessageSnackbar";
   and, call those function upon promise resolve and reject respectively
  */
 const PostsList = (props) => {
-	const { postsArr, loader, postsDataErrorMsg } = useSelector(
-		(state) => state.posts
-	);
-	const [openSnackBar, setOpenSnackBar] = useState(false);
-	const dispatch = useDispatch();
+  const { postsArr, loader, postsDataErrorMsg } = useSelector(
+    (state) => state.posts
+  );
+  const [openSnackBar, setOpenSnackBar] = useState(false);
+  const dispatch = useDispatch();
 
-	useEffect(() => {
-		fetchNewPosts();
-	}, []);
-	const fetchNewPosts = () => {
-		dispatch(getPostsData({ handleSnackbarOpen, handleSnackbarClose }));
-	};
-	const handleSnackbarOpen = () => {
-		setOpenSnackBar(true);
-	};
+  useEffect(() => {
+    fetchNewPosts();
+  }, []);
+  const fetchNewPosts = () => {
+    dispatch(getPostsData({ handleSnackbarOpen, handleSnackbarClose }));
+  };
+  const handleSnackbarOpen = () => {
+    setOpenSnackBar(true);
+  };
 
-	const handleSnackbarClose = (event, reason) => {
-		if (reason === "clickaway") {
-			return;
-		}
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnackBar(false);
+  };
 
-		setOpenSnackBar(false);
-	};
-
-	// console.log("<>", postArr, loader);
-	return loader ? (
-		<Loader />
-	) : (
-		<>
-			<MessageSnackbar
-				message={postsDataErrorMsg}
-				onCloseHandle={handleSnackbarClose}
-				open={openSnackBar}
-			/>
-			{postsArr.length === 0 ? (
-				<p>No Posts Found</p>
-			) : (
-				postsArr?.map((eachPost) => (
-					<SinglePost key={eachPost?._id} eachPost={eachPost} />
-				))
-			)}
-		</>
-	);
+  // console.log("<>", postArr, loader);
+  return loader ? (
+    <Loader />
+  ) : (
+    <>
+      <MessageSnackbar
+        message={postsDataErrorMsg}
+        onCloseHandle={handleSnackbarClose}
+        open={openSnackBar}
+        hideAfter={5000}
+      />
+      {postsArr.length === 0 ? (
+        <p>No Posts Found</p>
+      ) : (
+        postsArr?.map((eachPost) => (
+          <SinglePost key={eachPost?._id} eachPost={eachPost} />
+        ))
+      )}
+    </>
+  );
 };
 
 // export default withLoader(PostsList);

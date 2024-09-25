@@ -44,7 +44,13 @@ const CreatePost = () => {
       >
         <Box sx={{ width: 800, maxWidth: "100%" }}>
           {postsDataErrorMsg !== "" && (
-            <Box>Error in creating post. Please try later.</Box>
+            <Box
+              sx={{
+                color: "red",
+              }}
+            >
+              Error in creating post. Please try later.
+            </Box>
           )}
           <TextField
             autoFocus
