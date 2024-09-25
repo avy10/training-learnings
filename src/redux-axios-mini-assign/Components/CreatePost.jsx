@@ -1,15 +1,19 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { createANewPost } from "../Posts/postSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { createANewPost, clearErrorMsg } from "../Posts/postSlice";
 import ButtonMUI from "./common/button/ButtonMUI";
 import SimpleDialog from "./common/dialog/SimpleDialog";
 import TextField from "@mui/material/TextField";
 import { Box } from "@mui/material";
 const CreatePost = () => {
 	const dispatch = useDispatch();
+	const { postsDataErrorMsg } = useSelector((state) => state.posts);
 	const [openDialog, setOpenDialog] = useState(false);
 	const handleDialogOpen = () => setOpenDialog(true);
-	const handleDialogClose = () => setOpenDialog(false);
+	const handleDialogClose = () => {
+		setOpenDialog(false);
+		dispatch(clearErrorMsg());
+	};
 
 	const paperPropsObject = {
 		component: "form",
@@ -36,6 +40,9 @@ const CreatePost = () => {
 				paperPropsObject={paperPropsObject}
 			>
 				<Box sx={{ width: 400, maxWidth: "100%" }}>
+					{postsDataErrorMsg !== "" && (
+						<Box>Error in creating post. Please try later.</Box>
+					)}
 					<TextField
 						autoFocus
 						required

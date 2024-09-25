@@ -106,7 +106,11 @@ export const postsInitialState = {
 const postSlice = createSlice({
 	name: "posts",
 	initialState: postsInitialState,
-	reducers: {},
+	reducers: {
+		clearErrorMsg: (state) => {
+			state.postsDataErrorMsg = "";
+		},
+	},
 	extraReducers: (builder) => {
 		builder
 			.addCase(getPostsData.pending, (state) => {
@@ -136,10 +140,15 @@ const postSlice = createSlice({
 			.addCase(createANewPost.pending, (state) => {
 				state.loader = true;
 			})
-			.addCase(createANewPost.fulfilled, (state) => {
+			.addCase(createANewPost.fulfilled, (state, action) => {
+				console.log(action);
+				action.meta.arg.handleDialogClose();
 				state.loader = false;
+				state.postsDataErrorMsg = "";
 			})
 			.addCase(createANewPost.rejected, (state, action) => {
+				console.log(action);
+
 				state.loader = false;
 				state.postsDataErrorMsg = `Error in creating a new post via POST : ${action.error.message} `;
 			})
@@ -165,6 +174,8 @@ const postSlice = createSlice({
 			});
 	},
 });
+
+export const { clearErrorMsg } = postSlice.actions;
 export default postSlice.reducer;
 
 /* 
