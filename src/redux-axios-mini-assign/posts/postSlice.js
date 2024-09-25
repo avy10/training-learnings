@@ -46,7 +46,7 @@ export const createANewPost = createAsyncThunk(
           headers: {
             projectID: PROJECT_ID,
             Authorization: `Bearer ${JWT_TOKEN}`,
-            // "Content-Type": "multipart/form-data",
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -82,25 +82,30 @@ export const deletePost = createAsyncThunk(
 export const editPost = createAsyncThunk(
   "posts/editPost",
   async (
-    { postID, handleIsEdit, postContent, clearPostContent },
-    { dispatch }
+    { postID, handleModalClose, postContent },
+    { dispatch, rejectWithValue }
   ) => {
     const host = `https://academics.newtonschool.co/api/v1/facebook/post/${postID}`;
     const formData = new FormData();
     formData.append("title", "Edited Title");
     formData.append("content", postContent);
-    const response = await axios.patch(host, formData, {
-      headers: {
-        projectID: PROJECT_ID,
-        Authorization: `Bearer ${JWT_TOKEN}`,
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    console.log("EDIT response", response);
-    dispatch(getPostsData());
-
-    clearPostContent();
-    handleIsEdit(false);
+    try {
+      const response = await axios.patch(host, formData, {
+        headers: {
+          projectID: PROJECT_ID,
+          Authorization: `Bearer ${JWT_TOKEN}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log("EDIT response", response);
+      if (response?.data?.status === "success" || response?.status === 204) {
+        console.log("I AM FETCHING NEW POST");
+        dispatch(getPostsData({}));
+      }
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
   }
 );
 export const postsInitialState = {
@@ -173,8 +178,10 @@ const postSlice = createSlice({
       .addCase(editPost.pending, (state) => {
         state.loader = true;
       })
-      .addCase(editPost.fulfilled, (state) => {
+      .addCase(editPost.fulfilled, (state, action) => {
         state.loader = false;
+        action?.meta?.arg?.handleModalClose?.();
+        state.postsDataErrorMsg = "";
       })
       .addCase(editPost.rejected, (state, action) => {
         state.loader = false;

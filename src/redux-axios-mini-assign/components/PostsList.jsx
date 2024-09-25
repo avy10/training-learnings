@@ -4,9 +4,7 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { getPostsData } from "../posts/postSlice";
 import Loader from "./common/loader/Loader";
-import Snackbar from "@mui/material/Snackbar";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
+
 import MessageSnackbar from "./common/snackbar/MessageSnackbar";
 // Two approaches for snackbar,
 /* 
@@ -20,8 +18,9 @@ const PostsList = (props) => {
   const { postsArr, loader, postsDataErrorMsg } = useSelector(
     (state) => state.posts
   );
-  const [openSnackBar, setOpenSnackBar] = useState(false);
   const dispatch = useDispatch();
+
+  const [openSnackBar, setOpenSnackBar] = useState(false);
 
   useEffect(() => {
     fetchNewPosts();
