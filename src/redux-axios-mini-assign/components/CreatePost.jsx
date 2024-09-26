@@ -14,7 +14,6 @@ const CreatePost = () => {
   const handleDialogOpen = () => setOpenDialog(true);
   const handleAutoDialogClose = () => {
     setOpenDialog(false);
-    dispatch(clearErrorMsg());
   };
   const handleClickDialogClose = () => {
     setOpenDialog(false);
