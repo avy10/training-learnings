@@ -7,12 +7,14 @@ import TextField from "@mui/material/TextField";
 import { Box } from "@mui/material";
 const CreatePost = () => {
   const dispatch = useDispatch();
-  const { postsDataErrorMsg, loader } = useSelector((state) => state.posts);
+  const { postsDataErrorMsg, submitLoader } = useSelector(
+    (state) => state.posts
+  );
   const [openDialog, setOpenDialog] = useState(false);
   const handleDialogOpen = () => setOpenDialog(true);
   const handleAutoDialogClose = () => {
     setOpenDialog(false);
-    // dispatch(clearErrorMsg());
+    dispatch(clearErrorMsg());
   };
   const handleClickDialogClose = () => {
     setOpenDialog(false);
@@ -39,7 +41,7 @@ const CreatePost = () => {
         dialogTitle={"Create post"}
         dialogActionName={"Post"}
         paperPropsObject={submitFormProps}
-        loadingState={loader}
+        loadingState={submitLoader}
         loadingStateText="Posting..."
       >
         <Box sx={{ width: 800, maxWidth: "100%" }}>

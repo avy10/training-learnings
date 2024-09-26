@@ -2,22 +2,29 @@ import SimpleDialog from "./common/dialog/SimpleDialog";
 import { Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import TextField from "@mui/material/TextField";
-import { editPost, clearErrorMsg } from "../posts/postSlice";
+import { editPost, clearErrorMsg, getPostsData } from "../posts/postSlice";
 
 const EditPostDialog = ({ content, postID, openDialog, handleDialogClose }) => {
   const dispatch = useDispatch();
 
-  const { postsDataErrorMsg, loader } = useSelector((state) => state.posts);
-  // const [existingTextFieldValue] = useState()
+  const { postsDataErrorMsg, submitLoader } = useSelector(
+    (state) => state.posts
+  );
+  // const [existingTextFieldValue] = useState() // if we make the input field state-controlled it will re-open the dialog when it is change. To prevent that material has given us this unique way of using submitFormProps
   const submitFormProps = {
     component: "form",
-    onSubmit: (event) => {
+    onSubmit: async (event) => {
       event.preventDefault();
       const formData = new FormData(event.currentTarget);
       const formJson = Object.fromEntries(formData.entries());
       const postContent = formJson.postContent;
       console.log("postContent", postContent);
-      dispatch(editPost({ postID, handleDialogClose, postContent }));
+      const response = await dispatch(editPost({ postID, postContent }));
+      console.log(response);
+      if (response?.meta?.requestStatus === "fulfilled") {
+        handleDialogClose();
+        dispatch(getPostsData());
+      }
     },
   };
   return (
@@ -27,7 +34,7 @@ const EditPostDialog = ({ content, postID, openDialog, handleDialogClose }) => {
       dialogTitle={"Edit post"}
       dialogActionName={"edit"}
       paperPropsObject={submitFormProps}
-      loadingState={loader}
+      loadingState={submitLoader}
       loadingStateText="Editing..."
     >
       <Box sx={{ width: 800, maxWidth: "100%" }}>

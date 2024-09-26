@@ -1,12 +1,13 @@
 import Snackbar from "@mui/material/Snackbar";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import { Button } from "@mui/material";
 const MessageSnackbar = ({
   open,
   onCloseHandle,
   message,
-  hideAfter = 4000,
+  vertical = "top",
+  horizontal = "center",
+  hideAfter = 14000,
 }) => {
   const action = (
     <>
@@ -25,8 +26,25 @@ const MessageSnackbar = ({
       open={open}
       autoHideDuration={hideAfter}
       onClose={onCloseHandle}
-      action={action}
+      anchorOrigin={{ vertical, horizontal }}
+      // action={action} // the close button has been hidden away
       message={message}
+      sx={{
+        width: "95vw",
+
+        "& .MuiSnackbarContent-root": {
+          width: "95vw",
+        },
+        "& .MuiSnackbarContent-message": {
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          width: "100%",
+          // basically the snackbar is automatically divided into content and action and, width of content is auto-set to maxContentWidth
+          // setting a custom width to .MuiSnackbarContent-action will not work
+        },
+      }}
     />
   );
 };

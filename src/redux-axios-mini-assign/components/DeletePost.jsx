@@ -1,22 +1,29 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deletePost } from "../posts/postSlice";
+import { deletePost, getPostsData, clearErrorMsg } from "../posts/postSlice";
 import { Box } from "@mui/material";
 import ButtonMUI from "./common/button/ButtonMUI";
 import GenericModal from "./common/modal/GenericModal";
 import SubmitButton from "./common/button/SubmitButton";
 const DeletePost = ({ postID }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const { loader } = useSelector((state) => state.posts);
+  const { submitLoader, postsDataErrorMsg } = useSelector(
+    (state) => state.posts
+  );
   const dispatch = useDispatch();
-  const postDeletion = () => {
-    dispatch(deletePost({ postID, closeDeleteModal }));
+  const postDeletion = async () => {
+    const response = await dispatch(deletePost(postID));
+    if (response?.meta?.requestStatus === "fulfilled") {
+      closeDeleteModal();
+      dispatch(getPostsData());
+    }
   };
   const openDeleteModal = () => {
     setShowDeleteModal(true);
   };
   const closeDeleteModal = () => {
     setShowDeleteModal(false);
+    dispatch(clearErrorMsg());
   };
   const customStyles = { textAlign: "center" };
   return (
@@ -34,6 +41,16 @@ const DeletePost = ({ postID }) => {
         customStyles={customStyles}
       >
         <h3>Are you sure you want to delete the post?</h3>
+        {postsDataErrorMsg !== "" && (
+          <Box
+            sx={{
+              color: "red",
+            }}
+          >
+            Error in deleting post. Please try later.
+          </Box>
+        )}
+
         <Box
           sx={{
             display: "flex",
@@ -43,7 +60,8 @@ const DeletePost = ({ postID }) => {
           <SubmitButton
             btnText={"yes"}
             clickHandlerFunction={postDeletion}
-            loadingState={loader}
+            loadingState={submitLoader}
+            loadingStateText="Deleting..."
           />
           <ButtonMUI btnText={"no"} eventHandler={closeDeleteModal} />
         </Box>

@@ -11,7 +11,16 @@ export default function App() {
   };
   // ._. */
   return (
-    <Container maxWidth="md" className="app">
+    <Container
+      maxWidth="md"
+      className="app"
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+      }}
+    >
       <h1>Facebook feed</h1>
       {/* <div>
         <SubmitButton

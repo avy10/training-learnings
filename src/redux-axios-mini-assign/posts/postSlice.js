@@ -7,8 +7,8 @@ const PROJECT_ID = `lkkoqstnysf1`; // original project ID whose limit got crosse
 // const PROJECT_ID = ""; // to simulate invalid project ID error
 export const getPostsData = createAsyncThunk(
   "posts/getPosts",
-  async ({ handleSnackbarOpen, handleSnackbarClose }, { rejectWithValue }) => {
-    // const host = `https://academics.newtonschool.co`;
+  async (_, { rejectWithValue }) => {
+    // const host = `https://academics.newtonschool.co`; // simulate 404
 
     const host = `https://academics.newtonschool.co/api/v1/facebook/post`;
     try {
@@ -17,8 +17,6 @@ export const getPostsData = createAsyncThunk(
           projectID: PROJECT_ID,
         },
       });
-      console.log(response);
-      // console.log(response?.status);
 
       return response.data;
     } catch (error) {
@@ -50,23 +48,19 @@ export const createANewPost = createAsyncThunk(
           },
         }
       );
-      console.log(response);
       if (response?.data?.status === "success" || response?.status === 201) {
-        console.log("I AM FETCHING NEW POST");
-        dispatch(getPostsData({}));
+        dispatch(getPostsData());
+        // not the recommended way, leaving this here for study reference
       }
       return response.data;
     } catch (error) {
       return rejectWithValue(error);
     }
-
-    // check if response is OK, then get new posts and close modal
-    // handleDialogClose();
   }
 );
 export const deletePost = createAsyncThunk(
   "posts/deletePost",
-  async ({ postID, closeDeleteModal }, { dispatch, rejectWithValue }) => {
+  async (postID, { rejectWithValue }) => {
     console.log("postID in deletePost async thunk", postID);
 
     const host = `https://academics.newtonschool.co/api/v1/facebook/post/${postID}`;
@@ -77,23 +71,17 @@ export const deletePost = createAsyncThunk(
           Authorization: `Bearer ${JWT_TOKEN}`,
         },
       });
-      console.log(response);
-
-      return { data: response.data, dispatch };
-      // return response.data;
+      return response.data;
     } catch (error) {
       return rejectWithValue(error);
     }
 
-    // check if response is OK, then get new posts
+    // check if response is OK, then get new posts // handled at the same place where this middleware function is called
   }
 );
 export const editPost = createAsyncThunk(
   "posts/editPost",
-  async (
-    { postID, handleModalClose, postContent },
-    { dispatch, rejectWithValue }
-  ) => {
+  async ({ postID, postContent }, { dispatch, rejectWithValue }) => {
     const host = `https://academics.newtonschool.co/api/v1/facebook/post/${postID}`;
     const formData = new FormData();
     formData.append("title", "Edited Title");
@@ -106,11 +94,7 @@ export const editPost = createAsyncThunk(
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log("EDIT response", response);
-      if (response?.data?.status === "success" || response?.status === 204) {
-        console.log("I AM FETCHING NEW POST");
-        dispatch(getPostsData({}));
-      }
+
       return response.data;
     } catch (error) {
       return rejectWithValue(error);
@@ -120,6 +104,7 @@ export const editPost = createAsyncThunk(
 export const postsInitialState = {
   postsArr: [],
   loader: false,
+  submitLoader: false,
   postsDataErrorMsg: "",
 };
 
@@ -137,14 +122,11 @@ const postSlice = createSlice({
         state.loader = true;
       })
       .addCase(getPostsData.fulfilled, (state, action) => {
-        console.log("I AM RUNNING", action);
-
         state.loader = false;
         state.postsArr = Array.isArray(action?.payload?.data)
           ? action.payload.data
           : [];
         state.postsDataErrorMsg = "";
-        action?.meta?.arg?.handleSnackbarClose?.();
       })
       .addCase(getPostsData.rejected, (state, action) => {
         console.log(action);
@@ -155,52 +137,45 @@ const postSlice = createSlice({
           state.postsDataErrorMsg = action.error.message;
         }
         state.loader = false;
-        action?.meta?.arg?.handleSnackbarOpen();
-
-        // state.postsDataErrorMsg = `Error in GET : ${action.error.message} `;
       })
       .addCase(createANewPost.pending, (state) => {
-        state.loader = true;
+        state.submitLoader = true;
       })
       .addCase(createANewPost.fulfilled, (state, action) => {
-        console.log(action);
         action.meta.arg.handleAutoDialogClose();
-        state.loader = false;
+        state.submitLoader = false;
+
         state.postsDataErrorMsg = "";
       })
       .addCase(createANewPost.rejected, (state, action) => {
-        console.log(action);
+        state.submitLoader = true;
 
-        state.loader = false;
         state.postsDataErrorMsg = `Error in creating a new post via POST : ${action.error.message} `;
       })
       .addCase(deletePost.pending, (state) => {
-        state.loader = true;
+        state.submitLoader = true;
       })
       .addCase(deletePost.fulfilled, (state, action) => {
-        console.log(action);
-        // state.loader = false;
-        // action?.meta?.arg?.closeDeleteModal();
-        // state.postsDataErrorMsg = "";
-        // if (action?.payload?.status === "success"){
-        //   console.log("I AM FETCHING NEW POST");
-        //   dispatch(getPostsData({}));
-        // }
+        state.submitLoader = false;
+
+        state.postsDataErrorMsg = "";
       })
       .addCase(deletePost.rejected, (state, action) => {
-        state.loader = false;
+        state.submitLoader = false;
+
         state.postsDataErrorMsg = `Error in DEL : ${action.error.message} `;
       })
       .addCase(editPost.pending, (state) => {
-        state.loader = true;
+        state.submitLoader = true;
       })
       .addCase(editPost.fulfilled, (state, action) => {
-        action?.meta?.arg?.handleModalClose?.();
-        state.loader = false;
+        state.submitLoader = false;
         state.postsDataErrorMsg = "";
+        // action?.meta?.arg?.handleModalClose?.();
+        // do not return here in extra reducers
       })
       .addCase(editPost.rejected, (state, action) => {
-        state.loader = false;
+        state.submitLoader = false;
         state.postsDataErrorMsg = `Error in PUT : ${action.error.message} `;
       });
   },

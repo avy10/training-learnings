@@ -4,8 +4,6 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import Button from "@mui/material/Button";
-import { styled } from "@mui/material/styles";
 import ButtonMUI from "../button/ButtonMUI";
 import SubmitButton from "../button/SubmitButton";
 const SimpleDialog = ({
@@ -13,9 +11,7 @@ const SimpleDialog = ({
   openDialog,
   handleClickDialogClose,
   dialogTitle,
-  dialogActionsHandler,
   dialogActionName,
-  onSubmitHandler,
   paperPropsObject = {},
   ariaLabelMsg = "Generic Dialog Box",
   loadingState,
@@ -48,9 +44,6 @@ const SimpleDialog = ({
       </IconButton>
       <DialogContent dividers>{children}</DialogContent>
       <DialogActions className="action-buttons">
-        {/* <Button type="submit" variant="contained" size="medium">
-          {dialogActionName}
-        </Button> */}
         <SubmitButton
           btnText={dialogActionName}
           loadingState={loadingState}
