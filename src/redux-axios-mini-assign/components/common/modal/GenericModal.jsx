@@ -13,6 +13,12 @@ const GenericModal = ({
   needBox = true,
   children,
 }) => {
+  /* needBox means do you need the default white colored box which
+  renders on top of the overlay
+  by default it is true means the modal will contain the white box
+  in case you want your components to render inside the modal 
+  use the props 
+  */
   const style = {
     position: "absolute",
     top: "50%",
