@@ -17,7 +17,7 @@ export const getPostsData = createAsyncThunk(
           projectID: PROJECT_ID,
         },
       });
-
+      console.log(response.data);
       return response.data;
     } catch (error) {
       console.log("error in fetch", error);
@@ -48,6 +48,9 @@ export const createANewPost = createAsyncThunk(
           },
         }
       );
+      console.log(response.data);
+
+      console.log(response.data);
       if (response?.data?.status === "success" || response?.status === 201) {
         dispatch(getPostsData());
         // not the recommended way, leaving this here for study reference
@@ -71,6 +74,8 @@ export const deletePost = createAsyncThunk(
           Authorization: `Bearer ${JWT_TOKEN}`,
         },
       });
+      console.log(response.data);
+
       return response.data;
     } catch (error) {
       return rejectWithValue(error);
@@ -94,6 +99,7 @@ export const editPost = createAsyncThunk(
           "Content-Type": "multipart/form-data",
         },
       });
+      console.log(response.data);
 
       return response.data;
     } catch (error) {
@@ -122,6 +128,7 @@ const postSlice = createSlice({
         state.loader = true;
       })
       .addCase(getPostsData.fulfilled, (state, action) => {
+        console.log(action);
         state.loader = false;
         state.postsArr = Array.isArray(action?.payload?.data)
           ? action.payload.data
@@ -142,12 +149,16 @@ const postSlice = createSlice({
         state.submitLoader = true;
       })
       .addCase(createANewPost.fulfilled, (state, action) => {
+        console.log(action);
+
         action.meta.arg.handleAutoDialogClose();
         state.submitLoader = false;
 
         state.postsDataErrorMsg = "";
       })
       .addCase(createANewPost.rejected, (state, action) => {
+        console.log(action);
+
         state.submitLoader = true;
 
         state.postsDataErrorMsg = `Error in creating a new post via POST : ${action.error.message} `;
@@ -156,11 +167,15 @@ const postSlice = createSlice({
         state.submitLoader = true;
       })
       .addCase(deletePost.fulfilled, (state, action) => {
+        console.log(action);
+
         state.submitLoader = false;
 
         state.postsDataErrorMsg = "";
       })
       .addCase(deletePost.rejected, (state, action) => {
+        console.log(action);
+
         state.submitLoader = false;
 
         state.postsDataErrorMsg = `Error in DEL : ${action.error.message} `;
@@ -169,12 +184,16 @@ const postSlice = createSlice({
         state.submitLoader = true;
       })
       .addCase(editPost.fulfilled, (state, action) => {
+        console.log(action);
+
         state.submitLoader = false;
         state.postsDataErrorMsg = "";
         // action?.meta?.arg?.handleModalClose?.();
         // do not return here in extra reducers
       })
       .addCase(editPost.rejected, (state, action) => {
+        console.log(action);
+
         state.submitLoader = false;
         state.postsDataErrorMsg = `Error in PUT : ${action.error.message} `;
       });
